@@ -31,7 +31,7 @@
 ; The vector table
 ;
         DATA
-__vector_table
+__initial_vector_table
     ; Initial Vector Table before relocation
         DCD     sfe(CSTACK)
         DCD     Reset_Handler               ; Reset Handler
@@ -53,7 +53,7 @@ __vector_table
 
     ; Relocated Vector Table beyond the 256B region around address 0.
     ; That region is used for NULL-pointer protection by the MPU.
-__relocated_vector_table
+__vector_table
         DCD     sfe(CSTACK)
         DCD     Reset_Handler               ; Reset Handler
         DCD     NMI_Handler                 ; NMI Handler
@@ -235,8 +235,8 @@ __Vectors_Size  EQU   __Vectors_End - __Vectors
 Reset_Handler
         ; relocate the Vector Table
         LDR     r0,=0xE000ED08  ; System Control Block/Vector Table Offset Reg
-        LDR     r1,=__relocated_vector_table
-        STR     r1,[r0]         ; SCB->VTOR := __relocated_vector_table
+        LDR     r1,=__vector_table
+        STR     r1,[r0]         ; SCB->VTOR := __vector_table
 
         LDR     r0,=SystemInit  ; CMSIS system initialization
         BLX     r0
